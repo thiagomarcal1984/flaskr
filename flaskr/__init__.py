@@ -20,14 +20,21 @@ def create_app(test_config=None):
         # Carrega a configuração de teste
         app.config.from_mapping(test_config)
     
-    # Garante que a pasta da instância existe, para cirar o DB.
+    # Garante que a pasta da instância existe, para criar o DB.
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
         
+    @app.route('/')
+    def index():
+        return 'Index is working.'
+
     @app.route('/hello')
     def hello():
         return 'Hello, world!'
-        
+
+    from . import db
+    db.init_app(app)
+
     return app
